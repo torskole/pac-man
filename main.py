@@ -97,29 +97,30 @@ game = Game()
 active_pacman = Pacman(game, 0, 0, None)
 frames = 0
 
-while active:
-    for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                active = False
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
+if __name__ == "__main__":
+    while active:
+        for event in pygame.event.get():
+                if event.type == pygame.QUIT:
                     active = False
-            elif event.type == pygame.MOUSEBUTTONUP:
-                x,y = pygame.mouse.get_pos()
-                print(game.coordinates_to_point(x,y))
-                #print("Debug: ", surface.get_at(position))
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        active = False
+                elif event.type == pygame.MOUSEBUTTONUP:
+                    x,y = pygame.mouse.get_pos()
+                    print(game.coordinates_to_point(x,y))
+                    #print("Debug: ", surface.get_at(position))
 
-    keys = pygame.key.get_pressed()
+        keys = pygame.key.get_pressed()
 
-    surface.fill(BLACK)
-    active_pacman.queue_movement(keys)
+        surface.fill(BLACK)
+        active_pacman.queue_movement(keys)
 
-    if frames % CHANGE_INTERVAL == 0:
-        active_pacman.move()
+        if frames % CHANGE_INTERVAL == 0:
+            active_pacman.move()
 
-    game.render_grid()
-    pygame.display.flip()
-    clock.tick(FPS)
-    frames += 1
+        game.render_grid()
+        pygame.display.flip()
+        clock.tick(FPS)
+        frames += 1
 
-pygame.quit()
+    pygame.quit()

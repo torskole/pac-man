@@ -1,4 +1,7 @@
-from main import *
+from main import Game
+from config import *
+
+game = Game()
 
 if __name__ == "__main__":
     path = "maze.txt"
