@@ -1,15 +1,11 @@
 import pygame
 from pygame.locals import (K_UP, K_DOWN, K_LEFT, K_RIGHT, K_w, K_s, K_a, K_d)
-from config import *
+from utils import *
 
 pygame.init()
 
-width = 25
-height = 25
-blocksize = 25
-
-WINDOW_WIDTH = width*blocksize
-WINDOW_HEIGHT = height*blocksize
+WINDOW_WIDTH = WIDTH*BLOCKSIZE
+WINDOW_HEIGHT = HEIGHT*BLOCKSIZE
 
 surface = pygame.display.set_mode([WINDOW_WIDTH, WINDOW_HEIGHT])
 
@@ -22,20 +18,32 @@ class Game:
         self.current_score = 0
         self.current_level = 1
         self.coordinates = []
-        for column in range(width):
+        for y in range(HEIGHT):
             self.coordinates.append([])
-            for _ in range(0, height):
-                self.coordinates[column].append({"type": None, "color": WHITE})
+            for x in range(0, WIDTH):
+                match read_character(x,y):
+                    case "W":
+                        self.coordinates[y].append({"type": False, "color": BLACK})
+                    case "S":
+                        self.coordinates[y].append({"type": None, "color":  YELLOW})
+                    case "G":
+                        self.coordinates[y].append({"type": None, "color":  BLUE})
+                    case "B":
+                        self.coordinates[y].append({"type": True, "color":  GREEN})
+                    case _:
+                        self.coordinates[y].append({"type": None, "color": WHITE})
 
     def render_grid(self):
-        for x in range(0, len(self.coordinates)):
-            for y in range (0, len(self.coordinates[x])):
-                pygame.draw.rect(surface, self.coordinates[x][y]["color"], pygame.Rect(blocksize*x, blocksize*y, blocksize, blocksize), 10)
+        for y in range(0, len(self.coordinates)):
+            for x in range (0, len(self.coordinates[y])):
+                pygame.draw.rect(surface, self.coordinates[x][y]["color"], pygame.Rect(BLOCKSIZE*x, BLOCKSIZE*y, BLOCKSIZE, BLOCKSIZE), 10)
+
+    def booster():
+        return
     
     @staticmethod
     def coordinates_to_point(x,y) -> tuple[int]:
-        
-        return (x // blocksize, y // blocksize)
+        return (x // BLOCKSIZE, y // BLOCKSIZE)
 
 class MovingFigure:
     def __init__(self, game, x, y, sprite) -> None:
@@ -58,16 +66,43 @@ class Pacman(MovingFigure):
         self.new_position["x"] = self.current_position["x"] + self.direction["x"]
         self.new_position["y"] = self.current_position["y"] + self.direction["y"]
 
-        if self.direction["x"] != 0:
-            print(True)
-            if self.new_position["x"] >= width or self.new_position["x"] < 0:
-                self.direction["x"] = 0
-                return
+        if self.direction["x"] != 0: # If moving along x-axis and going outside of the maze
+            if self.new_position["x"] >= WIDTH:
+                if game.coordinates[0][self.new_position["y"]]["type"] != False:
+                    self.new_position["x"] = 0
+                else:
+                    self.direction["x"] = 0
+                    return
             
-        if self.direction["y"] != 0:
-            if self.new_position["y"] >= height or self.new_position["y"] < 0:
-                self.direction["y"] = 0
-                return
+            if self.new_position["x"] < 0:
+                if game.coordinates[WIDTH-1][self.new_position["y"]]["type"] != False:
+                    self.new_position["x"] = WIDTH-1
+                else:
+                    self.direction["x"] = 0
+                    return
+            
+        if self.direction["y"] != 0: # If moving along y-axis and going outside of the maze
+            if self.new_position["y"] >= HEIGHT:
+                if game.coordinates[self.new_position["x"]][0]["type"] != False:
+                    self.new_position["y"] = 0
+                else:
+                    self.direction["y"] = 0
+                    return
+
+            if self.new_position["y"] < 0:
+                if game.coordinates[self.new_position["x"]][HEIGHT-1]["type"] != False:
+                    self.new_position["y"] = HEIGHT-1
+                else:
+                    self.direction["y"] = 0
+                    return
+            
+        if game.coordinates[self.new_position["x"]][self.new_position["y"]]["type"] == False: # If hitting a wall
+            self.direction["x"] = 0
+            self.direction["y"] = 0
+            return
+
+        if game.coordinates[self.new_position["x"]][self.new_position["y"]]["type"] == True:
+            print("Booster")
 
         game.coordinates[self.current_position["x"]][self.current_position["y"]]["color"] = WHITE
         game.coordinates[self.new_position["x"]][self.new_position["y"]]["color"] = YELLOW
@@ -105,10 +140,6 @@ if __name__ == "__main__":
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         active = False
-                elif event.type == pygame.MOUSEBUTTONUP:
-                    x,y = pygame.mouse.get_pos()
-                    print(game.coordinates_to_point(x,y))
-                    #print("Debug: ", surface.get_at(position))
 
         keys = pygame.key.get_pressed()
 
