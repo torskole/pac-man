@@ -3,6 +3,7 @@ from pygame.locals import (K_w, K_s, K_g, K_b, K_r, K_ESCAPE)
 from main import Game
 from utils import *
 
+
 game = Game()
 
 clock = pygame.time.Clock()
