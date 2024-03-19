@@ -1,5 +1,5 @@
 import pygame
-from pygame.locals import (K_w, K_s, K_g, K_b, K_ESCAPE)
+from pygame.locals import (K_w, K_s, K_g, K_b, K_r, K_ESCAPE)
 from main import Game
 from utils import *
 
@@ -74,6 +74,10 @@ if __name__ == "__main__":
                     current_mode = "G"
                 elif keys[K_b]:
                     current_mode = "B"
+                elif keys[K_r]:
+                    write_file("")
+                    game = Game()
+                    print("Reset")
                 print("Current mode:", current_mode)  
 
         mouse_buttons = pygame.mouse.get_pressed()
@@ -81,7 +85,7 @@ if __name__ == "__main__":
         if mouse_buttons[0]:
             delete_mode = False
             x,y = pygame.mouse.get_pos()
-            point_x, point_y = game.coordinates_to_point(x,y)
+            point_x, point_y = coordinates_to_point(x,y)
             read_point(point_x, point_y)
 
         if mouse_buttons[1]:
@@ -92,7 +96,7 @@ if __name__ == "__main__":
         if mouse_buttons[2]:
             delete_mode = True
             x,y = pygame.mouse.get_pos()
-            point_x, point_y = game.coordinates_to_point(x,y)
+            point_x, point_y = coordinates_to_point(x,y)
             read_point(point_x, point_y)
 
         game.render_grid()

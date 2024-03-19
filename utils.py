@@ -2,7 +2,7 @@ HEIGHT = 25
 WIDTH = 25
 BLOCKSIZE = 25
 FPS = 60
-CHANGE_INTERVAL = FPS//5
+CHANGE_INTERVAL = FPS//6.5
 
 # Colors
 BLACK = (0, 0, 0)
@@ -14,6 +14,9 @@ YELLOW = (255, 255, 0)
 
 path = f"maze_{HEIGHT}_{WIDTH}.txt"
 text_file = ""
+
+def coordinates_to_point(x,y) -> tuple[int]:
+    return (x // BLOCKSIZE, y // BLOCKSIZE)
 
 def validate_file():
      global text_file
