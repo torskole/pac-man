@@ -1,10 +1,14 @@
 from enum import Enum
 
+FOG = False
+VISIBLE_RANGE = 4
+
 HEIGHT = 25
 WIDTH = 25
 BLOCKSIZE = 25
 FPS = 60
-CHANGE_INTERVAL = FPS//10
+CHANGE_INTERVAL = FPS//8
+GUARD_INTERVAL = CHANGE_INTERVAL//0.8
 
 # Colors
 BLACK = (0, 0, 0)
@@ -23,22 +27,12 @@ class Sprite(Enum):
     FUGITIVE = 10
     GUARD = 20
     BOOST = 30
+    NONE = 0
     DOWN = 1
     UP = 2
     LEFT = 3
     RIGHT = 4
     IDLE = 5
-    # FUGITIVE_DOWN = 11
-    # FUGITIVE_UP = 12
-    # FUGITIVE_LEFT = 13
-    # FUGITIVE_RIGHT = 14
-    # FUGITIVE_IDLE = 15
-    # GUARD_DOWN = 21
-    # GUARD_UP = 22
-    # GUARD_LEFT = 23
-    # GUARD_RIGHT = 24
-    # GUARD_IDLE = 25
-    # BOOST = 31
 
 def coordinates_to_point(x, y) -> tuple[int]:
     return (x // BLOCKSIZE, y // BLOCKSIZE)
@@ -64,7 +58,6 @@ def validate_file():
 def write_file(str):
     with open(path, "w") as file:
         file.write(str)
-    #print("Written")
 
 def read_file():
     global text_file
