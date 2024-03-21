@@ -21,6 +21,7 @@ class Game:
     Klasse for å representere spillet.
 
     Attributter:
+        edit_mode (bool): Hvis spillet skal innta redigeringsmodus
         current_score (int): Gjeldende poengsum (ikke implementert)
         scared_guards (bool): Status for om vaktene er skremt (ikke implementert)
         coordinates (list): En todimensjonal liste som inneholder informasjon om hver rute på spillbrettet
@@ -31,7 +32,7 @@ class Game:
         pause_screen (str): Tekst som vises når spillet ikke er aktivt
 
     Metoder:
-        __init__(self): Initialiserer spillattributter
+        __init__(self, edit_mode: bool): Initialiserer spillattributter
         render_text(self, text: str, color: tuple) -> None: Rendrer en tekst til skjermen
         load_image(self, key: str) -> pygame.Surface: Returnerer et innlastet bilde, eventuelt laster det inn
         draw_grid(self, x: int, y: int) -> None: Tegner rutenettet til spillbrettet
@@ -41,8 +42,8 @@ class Game:
         check_available_position(self, x: int, y: int) -> bool: Returnerer om en gitt posisjon er tilgjengelig
         clear_references(self, type: str) -> None: Fjerner en bestemt type fra brettet
     """
-    def __init__(self) -> None:
-        self.edit_mode = False
+    def __init__(self, edit_mode: bool) -> None:
+        self.edit_mode = edit_mode
         self.current_score = 0
         self.scared_guards = False
         self.coordinates = []
@@ -339,7 +340,7 @@ class Player(MovingFigure):
 def start_game() -> None:
     """ Genererer banen, vakter og spilleren og fjerner tidligere spill """
     global game; global active_player
-    game = Game()
+    game = Game(False)
     game.spawnpoints = game.find_type("Spawnpoint")
     spawnpoint = random.choice(game.spawnpoints)
     active_player = Player(game, spawnpoint[0], spawnpoint[1], Sprite.FUGITIVE)
