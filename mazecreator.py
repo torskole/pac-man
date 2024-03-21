@@ -5,7 +5,7 @@ from utils import *
 
 
 game = Game()
-
+game.edit_mode = True
 clock = pygame.time.Clock()
 
 current_mode = "W"
@@ -79,6 +79,7 @@ if __name__ == "__main__":
                 elif keys[K_r]:
                     write_file("")
                     game = Game()
+                    game.edit_mode = True
                     print("Reset")
                 print("Current mode:", current_mode)  
 
@@ -93,6 +94,7 @@ if __name__ == "__main__":
         if mouse_buttons[1]:
             write_file("")
             game = Game()
+            game.edit_mode = True
             print("Reset")
 
         if mouse_buttons[2]:

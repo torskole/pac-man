@@ -42,6 +42,7 @@ class Game:
         clear_references(self, type: str) -> None: Fjerner en bestemt type fra brettet
     """
     def __init__(self) -> None:
+        self.edit_mode = False
         self.current_score = 0
         self.scared_guards = False
         self.coordinates = []
@@ -90,23 +91,25 @@ class Game:
             case False:
                 pygame.draw.rect(surface, self.coordinates[x][y]["color"], cell_rect, 10)
             case _:
-                sprite_number = self.coordinates[x][y]["type"]
-                image = self.load_image(sprite_number)
+                if not self.edit_mode:
+                    sprite_number = self.coordinates[x][y]["type"]
+                    image = self.load_image(sprite_number)
 
-                pygame.draw.rect(surface, BACKGROUND_COLOR, cell_rect, 10)
-                image_width, image_height = image.get_size()
-                max_size = min(BLOCKSIZE, BLOCKSIZE)
-                if image_width > image_height:
-                    scaled_width = max_size
-                    scaled_height = int(image_height * (max_size / image_width))
+                    image_width, image_height = image.get_size()
+                    max_size = min(BLOCKSIZE, BLOCKSIZE)
+                    if image_width > image_height:
+                        scaled_width = max_size
+                        scaled_height = int(image_height * (max_size / image_width))
+                    else:
+                        scaled_height = max_size
+                        scaled_width = int(image_width * (max_size / image_height))
+
+                    image = pygame.transform.scale(image, (scaled_width, scaled_height))
+                    surface.blit(image, (cell_rect.centerx - scaled_width // 2, cell_rect.centery - scaled_height // 2))
                 else:
-                    scaled_height = max_size
-                    scaled_width = int(image_width * (max_size / image_height))
+                    pygame.draw.rect(surface, self.coordinates[x][y]["color"], cell_rect, 10)
 
-                image = pygame.transform.scale(image, (scaled_width, scaled_height))
-                surface.blit(image, (cell_rect.centerx - scaled_width // 2, cell_rect.centery - scaled_height // 2))
-
-    def render_grid(self, active_player: object) -> None:
+    def render_grid(self, active_player: object = None) -> None:
         """ Rendrer det synlige spillbrettet basert på innstillinger """
         if FOG:
             player_x, player_y = active_player.current_position["x"], active_player.current_position["y"]
