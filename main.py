@@ -92,6 +92,7 @@ class Game:
                 pygame.draw.rect(surface, self.coordinates[x][y]["color"], cell_rect, 10)
             case _:
                 if not self.edit_mode:
+                    pygame.draw.rect(surface, BACKGROUND_COLOR, cell_rect, 10)
                     sprite_number = self.coordinates[x][y]["type"]
                     image = self.load_image(sprite_number)
 
