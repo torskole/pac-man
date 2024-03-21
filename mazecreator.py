@@ -12,7 +12,8 @@ current_mode = "W"
 delete_mode = False
 active = True
 
-def read_point(x, y):
+def read_point(x: int, y: int) -> None:
+    """ Oppdaterer kartfilen basert på generatoren """
     # Access the global variable text_file
     global text_file
     
@@ -38,7 +39,7 @@ def read_point(x, y):
         # Write the updated lines back to the file
         file.writelines(lines)
     
-    # Change the color of the corresponding grid cell in the game display to YELLOW
+    # Changes color to illustrate different types
     if delete_mode:
         game.coordinates[x][y]["color"] = WHITE
     else:
@@ -54,7 +55,7 @@ def read_point(x, y):
             case _:
                 game.coordinates[x][y]["color"] = WHITE
     
-    # Print a message indicating that the character at the specified position has been changed
+    # Status update
     print("Character at position ({}, {}) changed".format(x, y))
 
 if __name__ == "__main__":
